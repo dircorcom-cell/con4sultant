@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>دراسة جدوى شركة تسويق - د. بشير بن علي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; scroll-behavior: smooth; padding-bottom: 250px; overflow-x: hidden; }
+        
+        .card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: 1.5rem; margin-bottom: 2rem; border: 1px solid #eef2f3; }
+        @media (min-width: 768px) { .card { padding: 3rem; margin-bottom: 3.5rem; } }
+
+        .sticky-nav { position: sticky; top: 0; z-index: 1000; background: rgba(255,255,255,0.98); backdrop-filter: blur(15px); border-bottom: 3px solid #3b82f6; }
+        .nav-container { display: flex; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .nav-container::-webkit-scrollbar { display: none; }
+        .nav-link { transition: all 0.3s; padding: 1rem 1.2rem; color: #64748b; font-weight: 600; font-size: 0.85rem; border-bottom: 3px solid transparent; white-space: nowrap; flex-shrink: 0; }
+        .active-link { border-bottom: 3px solid #3b82f6; color: #3b82f6; font-weight: 800; }
+
+        .slider-label { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem; }
+        input[type=range] { height: 10px; -webkit-appearance: none; background: #dfe7ef; border-radius: 10px; width: 100%; cursor: pointer; }
+        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: #3b82f6; border: 4px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+
+        .footer-fixed { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(12px); color: white; z-index: 2000; border-top: 4px solid #3b82f6; padding: 1rem 0; }
+        .social-icon { transition: all 0.3s; font-size: 1.4rem; margin: 0 0.4rem; color: #cbd5e1; display: inline-block; padding: 0.5rem; }
+        .channel-btn { font-size: 0.75rem; padding: 0.6rem 1rem; border-radius: 99px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); transition: all 0.3s; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; margin-bottom: 0.5rem; }
+
+        .table-container { overflow-x: auto; border-radius: 1rem; border: 1px solid #e2e8f0; }
+        .risk-card { transition: all 0.3s; border-right-width: 8px; height: auto; display: flex; flex-direction: column; }
+
+        h1 { font-size: 1.8rem !important; line-height: 1.3 !important; }
+        h2 { font-size: 1.5rem !important; font-weight: 900 !important; }
+        @media (min-width: 768px) { 
+            h1 { font-size: 3.5rem !important; }
+            h2 { font-size: 2rem !important; }
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <header class="bg-slate-900 text-white py-10 md:py-14 px-4 border-b-8 border-blue-600">
+        <div class="container mx-auto">
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-8">
+                <div class="text-center lg:text-right w-full">
+                    <h1 class="font-black mb-4 text-blue-400 leading-tight italic">شركة تسويق (مكتب القاهرة وجدة)</h1>
+                    <p class="text-slate-200 text-lg md:text-xl font-medium">إعداد وتصميم: <span class="text-emerald-400 underline decoration-4 underline-offset-8 italic font-black">د. بشير بن علي</span></p>
+                    <p class="text-slate-400 text-sm md:text-base mt-2 font-bold italic underline decoration-blue-500">مستشار استراتيجي - مدير تنفيذي</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-3xl p-6 md:p-8 rounded-[2rem] border border-white/20 w-full lg:w-[400px] shadow-2xl text-center">
+                    <span class="text-xs text-blue-200 block mb-3 font-black uppercase tracking-[0.2em]">محرك سعر الصرف اللحظي</span>
+                    <span class="text-emerald-400 font-black text-2xl md:text-3xl" id="exchangeRateDisplay">1 ريال = 13.00 جنيه</span>
+                    <input type="range" id="rateSlider" min="10" max="30" step="0.1" value="13.0" oninput="calculateAll()" class="mt-6 accent-emerald-400">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav class="sticky-nav shadow-2xl">
+        <div class="container mx-auto nav-container px-2">
+            <a href="#summary" class="nav-link">1. الملخص</a>
+            <a href="#strategic" class="nav-link">2. الاستراتيجية</a>
+            <a href="#model" class="nav-link">3. نموذج العمل</a>
+            <a href="#marketing" class="nav-link">4. التسويق</a>
+            <a href="#technical" class="nav-link">5. الفنية</a>
+            <a href="#simulator" class="nav-link font-bold text-blue-600 bg-blue-50">6. المحاكي المالي</a>
+            <a href="#projections" class="nav-link">7. التوقعات</a>
+            <a href="#risk" class="nav-link font-bold text-red-600">8. المخاطر</a>
+            <a href="#deck" class="nav-link font-bold text-emerald-600">9. العرض الاستثماري</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto py-8 md:py-12 px-4">
+
+        <section id="summary" class="card border-r-[8px] md:border-r-[12px] border-blue-600">
+            <h2 class="font-black mb-6 md:mb-8 text-slate-900 flex items-center gap-3 md:gap-5"><span class="p-3 md:p-4 bg-blue-100 rounded-2xl md:rounded-3xl text-blue-600 text-lg md:text-2xl">📋</span> 1. الملخص التنفيذي</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
+                <div class="space-y-4 md:space-y-6 text-slate-700 leading-loose">
+                    <p class="text-base md:text-lg">المشروع هو وكالة تسويق هجينة، تجمع بين كفاءة الإنتاج الفني في القاهرة وقوة المبيعات والانتشار في جدة.</p>
+                    <div class="bg-blue-50 p-5 md:p-6 rounded-2xl md:rounded-3xl border-r-8 border-blue-400 font-black text-slate-900 text-sm md:text-base">
+                        مدة التأسيس : 60 يوماً
+                    </div>
+                </div>
+                <div class="bg-slate-900 text-white p-8 md:p-10 rounded-[2rem] md:rounded-[2.5rem] shadow-2xl text-center border-b-8 border-emerald-500">
+                    <h4 class="font-bold text-blue-400 mb-2 md:mb-4 uppercase tracking-widest text-xs md:text-sm">إجمالي مبلغ الاستثمار لعام 2026:</h4>
+                    <p class="text-4xl md:text-6xl font-black text-white"><span id="summaryAsk">0</span> <small class="text-lg md:text-xl text-emerald-400">ريال</small></p>
+                    <p class="text-[10px] md:text-xs mt-4 italic text-slate-400 font-medium">*(يشمل التأسيس القانوني + شهرين تأسيس + 4 أشهر تشغيل أمان)*</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="strategic" class="card border-r-[8px] md:border-r-[12px] border-emerald-600">
+            <h2 class="font-black mb-8 text-slate-900 flex items-center gap-4"><span class="p-3 md:p-4 bg-emerald-100 rounded-3xl text-emerald-600">🚀</span> 2. الدراسة الاستراتيجية</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+                <div class="bg-slate-50 p-6 md:p-8 rounded-3xl border">
+                    <h4 class="text-emerald-700 mb-4 font-black underline decoration-emerald-200 underline-offset-8">ميزتنا التنافسية:</h4>
+                    <p class="text-sm md:text-base text-slate-700 leading-loose">"الجودة المؤسسية، سرعة الاستجابة، وجمال المنتج النهائي". الاستفادة من فجوة تكاليف الإنتاج في القاهرة لتقديم أسعار لا تُنافس مع الحفاظ على أعلى معايير الجودة السعودية.</p>
+                </div>
+                <div class="bg-slate-50 p-6 md:p-8 rounded-3xl border">
+                    <h4 class="text-emerald-700 mb-4 font-black">تحليل SWOT الاستراتيجي:</h4>
+                    <div class="grid grid-cols-2 gap-4 text-[10px] md:text-xs">
+                        <div class="p-4 bg-green-100 rounded-2xl border border-green-200"><b>القوة:</b> فارق صرف 1:13.</div>
+                        <div class="p-4 bg-red-100 rounded-2xl border border-red-200"><b>الضعف:</b> إدارة الفريق عن بعد.</div>
+                        <div class="p-4 bg-blue-100 rounded-2xl border border-blue-200"><b>الفرص:</b> طفرة العقارات بجدة.</div>
+                        <div class="p-4 bg-orange-100 rounded-2xl border border-orange-200"><b>التهديدات:</b> تذبذب الجنيه.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="model" class="card border-r-[8px] md:border-r-[12px] border-amber-600">
+            <h2 class="font-black mb-8 text-slate-900 flex items-center gap-4"><span class="p-3 md:p-4 bg-amber-100 rounded-3xl text-amber-600">🏗️</span> 3. نموذج العمل</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 md:p-8 bg-slate-900 text-white rounded-[2rem] shadow-xl">
+                    <h4 class="text-amber-400 mb-4 font-black border-b border-amber-400/30 pb-2 italic">الأنشطة الاستراتيجية:</h4>
+                    <p class="text-xs md:text-sm leading-loose opacity-90 font-bold">إنتاج فني متكامل، مبيعات ميدانية وهاتفية، حملات ترويج عقاري، وإشراف إداري مباشر.</p>
+                </div>
+                <div class="p-6 md:p-8 bg-blue-600 text-white rounded-[2rem] shadow-xl">
+                    <h4 class="text-blue-100 mb-4 font-black border-b border-blue-100/30 pb-2 italic">هيكل الإيرادات:</h4>
+                    <p class="text-xs md:text-sm leading-loose opacity-90 font-bold">مشاريع One-time، باقات تشغيل Retainer، وعمولات بيع الوحدات السكنية الضخمة.</p>
+                </div>
+                <div class="p-6 md:p-8 bg-slate-100 border rounded-[2rem] text-slate-700 shadow-xl">
+                    <h4 class="text-slate-900 mb-4 font-black border-b border-slate-300 pb-2 italic">هيكل التكاليف:</h4>
+                    <p class="text-xs md:text-sm leading-loose font-bold">رواتب القاهرة (جنيه)، رواتب جدة (ريال)، أنظمة سحابية، وزيارات إشرافية دورية.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="marketing" class="card border-r-[8px] md:border-r-[12px] border-purple-600">
+            <h2 class="font-black mb-8 text-slate-900 flex items-center gap-4"><span class="p-3 md:p-4 bg-purple-100 rounded-3xl text-purple-600">🎯</span> 4. الدراسة التسويقية</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 text-center">
+                <div class="bg-slate-50 p-6 md:p-8 rounded-3xl border flex flex-col justify-center">
+                    <h4 class="text-purple-700 mb-3 font-black">السوق المخدوم (SAM):</h4>
+                    <p class="text-base md:text-lg font-black text-slate-800 uppercase italic">شركات التطوير العقاري والمشافي المتوسطة بجدة</p>
+                </div>
+                <div class="bg-blue-100 rounded-3xl border p-6 md:p-8 border-blue-200">
+                    <h4 class="text-blue-900 mb-3 italic font-black">الاستراتيجية التنافسية:</h4>
+                    <p class="text-sm md:text-base font-bold text-blue-800">كسر الأسعار التقليدية مع تقديم "جودة الوكالات العالمية" بفضل فارق التكلفة.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="technical" class="card border-r-[8px] md:border-r-[12px] border-red-600">
+            <h2 class="font-black mb-8 text-slate-900 flex items-center gap-4"><span class="p-3 md:p-4 bg-red-100 rounded-3xl text-red-600">🛠️</span> 5. الدراسة الفنية (خطة الـ 60 يوماً)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10">
+                <div class="p-6 md:p-8 bg-slate-50 rounded-3xl border-l-[8px] border-red-500 leading-loose">
+                    <h4 class="mb-4 uppercase tracking-widest text-red-700 font-black">خطة التأسيس والقانون:</h4>
+                    <ul class="space-y-4 text-xs md:text-sm font-bold">
+                        <li class="flex items-start gap-3">
+                            <span class="bg-red-200 text-red-700 w-6 h-6 rounded-full flex items-center justify-center shrink-0">1</span>
+                            <span>الشهر الأول: التصاريح القانونية، السجل التجاري، وعقد الإيجار بالقاهرة.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <span class="bg-red-200 text-red-700 w-6 h-6 rounded-full flex items-center justify-center shrink-0">2</span>
+                            <span>الشهر الثاني: تجهيز الأجهزة، التوظيف، وإطلاق المبيعات بجدة.</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="p-6 md:p-8 bg-blue-50 rounded-3xl border-dashed border-2 border-blue-300 flex flex-col justify-center text-center">
+                    <h4 class="mb-4 text-blue-800 font-black">بند الإشراف المباشر:</h4>
+                    <p class="font-bold text-blue-900 italic text-sm md:text-base leading-relaxed">"تم رصد ميزانية (2,000 ريال) كل شهرين لزيارة د. بشير الميدانية لمكتب القاهرة، لضمان الضبط الإداري والتقني."</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="simulator" class="card border-[4px] md:border-[6px] border-blue-600 bg-slate-50 px-4 py-8 md:px-6 md:py-10">
+            <div class="flex flex-col md:flex-row justify-between items-center md:items-end mb-10 border-b pb-8 gap-6">
+                <div class="w-full text-center md:text-right">
+                    <h2 class="text-2xl md:text-4xl font-black text-slate-900 italic">6. المحاكي المالي التفاعلي</h2>
+                    <p class="text-slate-500 mt-2 font-bold italic text-xs md:text-base">تشمل: تأسيس + أنظمة + سفر + فرق المبيعات</p>
+                </div>
+                <div class="bg-emerald-600 text-white p-6 rounded-[2rem] shadow-2xl w-full md:w-auto text-center border-b-8 border-emerald-800">
+                    <p class="text-[10px] md:text-xs opacity-90 mb-1 font-black uppercase tracking-widest">صافي الربح الشهري المتوقع</p>
+                    <span id="monthlyNetProfit" class="text-3xl md:text-4xl font-black">0</span> <small class="text-lg">ريال</small>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                <div class="space-y-6 bg-white p-6 rounded-[2rem] border shadow-sm">
+                    <h3 class="font-black text-red-700 border-b pb-4 mb-4 flex items-center justify-between text-sm italic">🇪🇬 مكتب القاهرة (EGP)</h3>
+                    <div class="space-y-5">
+                        <div>
+                            <div class="slider-label"><span>جرافيك ديزاين</span> <span id="v_s_gd" class="text-blue-600">12000</span></div>
+                            <input type="range" id="s_gd" min="1000" max="35000" step="500" value="12000" oninput="calculateAll()">
+                            <div class="flex justify-between text-[11px] mt-2 font-bold italic"><span>العدد:</span> <input type="number" id="n_gd" value="2" class="w-10 border-b-2 border-red-200 text-center outline-none" oninput="calculateAll()"></div>
+                        </div>
+                        <div>
+                            <div class="slider-label"><span>فيديو وانتاج</span> <span id="v_s_vid" class="text-blue-600">15000</span></div>
+                            <input type="range" id="s_vid" min="1000" max="45000" step="500" value="15000" oninput="calculateAll()">
+                            <div class="flex justify-between text-[11px] mt-2 font-bold italic"><span>العدد:</span> <input type="number" id="n_vid" value="1" class="w-10 border-b-2 border-red-200 text-center outline-none" oninput="calculateAll()"></div>
+                        </div>
+                        <div>
+                            <div class="slider-label"><span>تصميم ويب</span> <span id="v_s_web" class="text-blue-600">20000</span></div>
+                            <input type="range" id="s_web" min="1000" max="55000" step="500" value="20000" oninput="calculateAll()">
+                            <div class="flex justify-between text-[11px] mt-2 font-bold italic"><span>العدد:</span> <input type="number" id="n_web" value="1" class="w-10 border-b-2 border-red-200 text-center outline-none" oninput="calculateAll()"></div>
+                        </div>
+                        <div class="pt-4 border-t">
+                            <div class="slider-label font-black text-slate-800"><span>إيجار القاهرة</span> <span id="v_rent_eg">30000</span></div>
+                            <input type="range" id="rent_eg" min="20000" max="45000" step="1000" value="30000" oninput="calculateAll()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-6 bg-white p-6 rounded-[2rem] border shadow-sm">
+                    <h3 class="font-black text-emerald-700 border-b pb-4 mb-4 flex items-center justify-between text-sm italic">🇸🇦 مكتب جدة (SAR)</h3>
+                    <div class="space-y-5">
+                        <div>
+                            <div class="slider-label"><span>د. بشير (الإدارة)</span> <span id="v_s_mgmt" class="text-blue-600">8000</span></div>
+                            <input type="range" id="s_mgmt" min="1000" max="25000" step="500" value="8000" oninput="calculateAll()">
+                        </div>
+                        <div>
+                            <div class="slider-label"><span>مبيعات هاتفية</span> <span id="v_s_sales" class="text-blue-600">3500</span></div>
+                            <input type="range" id="s_sales" min="1000" max="10000" step="500" value="3500" oninput="calculateAll()">
+                            <div class="flex justify-between text-[11px] mt-2 font-bold italic"><span>العدد:</span> <input type="number" id="n_sales" value="2" class="w-10 border-b-2 border-emerald-200 text-center outline-none" oninput="calculateAll()"></div>
+                        </div>
+                        <div class="pt-2 border-t">
+                            <div class="slider-label text-blue-600 font-black"><span>الأنظمة (SaaS)</span> <span id="v_saas">1500</span></div>
+                            <input type="range" id="saas" min="0" max="10000" step="100" value="1500" oninput="calculateAll()">
+                        </div>
+                        <div>
+                            <div class="slider-label text-blue-800 font-black"><span>ميزانية الترويج</span> <span id="v_promo">5000</span></div>
+                            <input type="range" id="promo" min="0" max="50000" step="500" value="5000" oninput="calculateAll()">
+                        </div>
+                        <div class="pt-4 border-t">
+                            <div class="slider-label text-emerald-600 font-black"><span>تجهيزات المقر (SAR)</span> <span id="v_cap_base">10000</span></div>
+                            <input type="range" id="cap_base" min="5000" max="100000" step="1000" value="10000" oninput="calculateAll()">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 space-y-6 bg-blue-900 text-white p-6 md:p-10 rounded-[2.5rem] shadow-2xl">
+                    <h3 class="font-black border-b border-white/20 pb-4 mb-6 flex flex-col md:flex-row justify-between items-center text-sm md:text-base tracking-widest gap-2">
+                        <span>💰 الإيرادات الشهرية المستهدفة</span>
+                        <span id="monthlyRev" class="text-emerald-400 text-xl md:text-2xl font-black italic">0 ريال</span>
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 text-sm text-center md:text-right">
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+                            <div class="slider-label text-white"><span>هوية بصرية</span> <span id="v_p1" class="text-emerald-300">3000</span></div>
+                            <input type="range" id="p1" min="500" max="15000" step="500" value="3000" oninput="calculateAll()">
+                            <div class="flex justify-between mt-3 italic font-bold"><span>الكمية:</span> <input type="number" id="q1" value="2" class="w-10 bg-transparent border-b-2 border-blue-400 text-center text-white outline-none" oninput="calculateAll()"></div>
+                        </div>
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
+                            <div class="slider-label text-white"><span>موشن جرافيك</span> <span id="v_p2" class="text-emerald-300">2500</span></div>
+                            <input type="range" id="p2" min="500" max="15000" step="500" value="2500" oninput="calculateAll()">
+                            <div class="flex justify-between mt-3 italic font-bold"><span>الكمية:</span> <input type="number" id="q2" value="3" class="w-10 bg-transparent border-b-2 border-blue-400 text-center text-white outline-none" oninput="calculateAll()"></div>
+                        </div>
+                        <div class="bg-white/10 p-5 md:p-6 rounded-3xl border border-emerald-500/30 sm:col-span-2">
+                            <div class="slider-label text-emerald-400 font-black"><span>باقة تشغيل (Retainer)</span> <span id="v_p5" class="text-white">4000</span></div>
+                            <input type="range" id="p5" min="500" max="30000" step="500" value="4000" oninput="calculateAll()" class="accent-emerald-400">
+                            <div class="flex justify-between mt-3 font-black text-emerald-200"><span>العملاء:</span> <input type="number" id="q5" value="4" class="w-10 bg-transparent border-b-2 border-white text-center text-white font-black text-lg outline-none" oninput="calculateAll()"></div>
+                        </div>
+                        <div class="bg-emerald-600/20 p-5 md:p-6 rounded-3xl border-2 border-emerald-400 sm:col-span-2 shadow-inner">
+                            <div class="slider-label text-emerald-300 font-black text-base md:text-lg italic"><span>🏠 عمولة بيع وحدة سكنية</span> <span id="v_p8" class="text-white">20000</span></div>
+                            <input type="range" id="p8" min="15000" max="40000" step="500" value="20000" oninput="calculateAll()" class="accent-emerald-300">
+                            <div class="flex justify-between mt-3 font-black text-white tracking-widest text-[10px] md:text-xs"><span>الهدف البيعي:</span> <input type="number" id="q8" value="1" class="w-10 bg-transparent border-b-2 border-emerald-400 text-center text-emerald-400 font-black text-xl md:text-2xl outline-none" oninput="calculateAll()"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projections" class="card border-r-[8px] md:border-r-[12px] border-indigo-600">
+            <h2 class="font-black mb-6 md:mb-8 text-slate-900 flex items-center gap-4"><span class="p-3 md:p-4 bg-indigo-100 rounded-3xl text-indigo-600 text-xl">📊</span> 7. التوقعات المالية</h2>
+            <div class="table-container no-scrollbar">
+                <table class="w-full text-center border-collapse text-sm md:text-base min-w-[600px]">
+                    <thead>
+                        <tr class="bg-slate-900 text-white font-black">
+                            <th class="p-4 md:p-6 border">البيان المالي</th>
+                            <th class="p-4 md:p-6 border">2026</th>
+                            <th class="p-4 md:p-6 border">2027</th>
+                            <th class="p-4 border">2028</th>
+                        </tr>
+                    </thead>
+                    <tbody class="font-bold text-slate-700 italic">
+                        <tr><td class="p-4 md:p-6 border bg-slate-50 text-right font-black">المبيعات (SAR)</td><td class="p-4 md:p-6 border" id="y1_sales">0</td><td class="p-4 md:p-6 border" id="y2_sales">0</td><td class="p-4 md:p-6 border" id="y3_sales">0</td></tr>
+                        <tr><td class="p-4 md:p-6 border bg-slate-50 text-right">المصروفات (SAR)</td><td class="p-4 md:p-6 border" id="y1_opex">0</td><td class="p-4 md:p-6 border" id="y2_opex">0</td><td class="p-4 md:p-6 border" id="y3_opex">0</td></tr>
+                        <tr class="text-emerald-700 bg-emerald-50 text-base md:text-xl font-black"><td class="p-4 md:p-6 border text-right">صافي الربح</td><td class="p-4 md:p-6 border" id="y1_net">0</td><td class="p-4 md:p-6 border" id="y2_net">0</td><td class="p-4 md:p-6 border" id="y3_net">0</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="risk" class="card border-r-[8px] md:border-r-[12px] border-red-600">
+            <h2 class="font-black mb-8 text-slate-900 flex items-center gap-4"><span class="p-3 md:p-4 bg-red-100 rounded-3xl text-red-600 text-xl">🛡️</span> 8. إدارة المخاطر وفلسفة التمويل</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                <div class="risk-card bg-blue-50 p-6 md:p-8 rounded-3xl border-r-blue-600 shadow-sm border border-slate-100">
+                    <h4 class="text-blue-700 mb-3 flex items-center gap-2 font-black text-sm md:text-base"><i class="fas fa-hand-holding-usd"></i> 1. فجوة التدفق النقدي</h4>
+                    <p class="text-xs md:text-sm text-slate-700 leading-relaxed">الدفعة الثانية تضمن عدم توقف العمل (Burn Rate) في حال تأخر تحصيل المستحقات من العملاء لضمان ولاء الفريق واستقرار الإنتاج.</p>
+                </div>
+                <div class="risk-card bg-emerald-50 p-6 md:p-8 rounded-3xl border-r-emerald-600 shadow-sm border border-slate-100">
+                    <h4 class="text-emerald-700 mb-3 flex items-center gap-2 font-black text-sm md:text-base"><i class="fas fa-chart-line"></i> 2. تسريع النمو (Growth)</h4>
+                    <p class="text-xs md:text-sm text-slate-700 leading-relaxed">إيرادات المرحلة الأولى تشغيلية. الدفعة الثانية مخصصة للتوسع المدروس ومضاعفة ميزانية الترويج بعد إثبات نجاح النموذج.</p>
+                </div>
+                <div class="risk-card bg-amber-50 p-6 md:p-8 rounded-3xl border-r-amber-600 shadow-sm border border-slate-100">
+                    <h4 class="text-amber-700 mb-3 flex items-center gap-2 font-black text-sm md:text-base"><i class="fas fa-clock"></i> 3. دورة المبيعات الطويلة</h4>
+                    <p class="text-xs md:text-sm text-slate-700 leading-relaxed">بيع الوحدات السكنية يستغرق وقتاً. الدفعة الثانية هي الجسر الذي يوصلنا إلى مرحلة العوائد الضخمة دون ضغوط مالية تؤثر على الجودة.</p>
+                </div>
+                <div class="risk-card bg-indigo-50 p-6 md:p-8 rounded-3xl border-r-indigo-600 shadow-sm border border-slate-100">
+                    <h4 class="text-indigo-700 mb-3 flex items-center gap-2 font-black text-sm md:text-base"><i class="fas fa-shield-alt"></i> 4. الأمان التشغيلي (Runway)</h4>
+                    <p class="text-xs md:text-sm text-slate-700 leading-relaxed">منهجياً، يحتاج المشروع لمدرج طيران لا يقل عن 6 أشهر من السيولة الجاهزة. الاعتماد على إيرادات البداية فقط يهدد استقرار الكفاءات.</p>
+                </div>
+                <div class="risk-card bg-rose-50 p-6 md:p-8 rounded-3xl border-r-rose-600 shadow-sm border border-slate-100">
+                    <h4 class="text-rose-700 mb-3 flex items-center gap-2 font-black text-sm md:text-base"><i class="fas fa-bullseye"></i> 5. الدفع مقابل النتائج</h4>
+                    <p class="text-xs md:text-sm text-slate-700 leading-relaxed">تجزئة التمويل تقلل المخاطر وتربط دفع السيولة بتحقيق مستهدفات المرحلة الأولى، مما يضمن انطلاقة صلبة وشراكة قائمة على الإنجاز.</p>
+                </div>
+
+                <div class="lg:col-span-3 bg-gradient-to-br from-slate-900 to-blue-900 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] shadow-2xl flex flex-col justify-center border-r-[12px] md:border-r-[16px] border-orange-500 mt-4">
+                    <h5 class="text-orange-400 font-black mb-4 text-xl md:text-2xl italic underline decoration-2 underline-offset-8 flex items-center gap-3">
+                        <i class="fas fa-handshake"></i> رؤية د. بشير للشريك المستثمر:
+                    </h5>
+                    <p class="text-base md:text-lg italic text-slate-100 leading-loose font-medium">
+                        "إن استثمارك هو دعوة لشراكة فعلية لبناء كيان تسويقي صلب. صممنا ميزانية الأمان وجدولة التمويل لنضمن معاً تجاوز عقبات البداية والوصول إلى مرحلة الربحية الكبرى بخطى واثقة."
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="deck" class="card bg-slate-900 text-white relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-8 md:p-12 opacity-5 font-black text-[6rem] md:text-[12rem] italic select-none">V23</div>
+            <div class="flex flex-col lg:flex-row justify-between items-start mb-10 md:mb-14 border-b border-white/10 pb-8 md:pb-10 gap-6">
+                <div>
+                    <h2 class="text-3xl md:text-5xl font-black text-blue-400">🎁 9. العرض الاستثماري</h2>
+                    <p class="text-slate-400 text-base md:text-lg mt-3 md:mt-4 font-black italic underline decoration-blue-500 decoration-4 underline-offset-8">جدولة التمويل والنمو لعام 2026</p>
+                </div>
+                <div class="bg-blue-600 px-8 py-3 rounded-full text-[10px] md:text-sm font-black shadow-2xl tracking-tighter uppercase">نموذج الاستدامة المطلقة</div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-16">
+                <div class="space-y-4 md:space-y-6 text-right">
+                    <h4 class="text-xs md:text-base font-black text-blue-400 mb-6 uppercase tracking-widest border-b-2 border-blue-400/30 pb-4 italic">جدولة التمويل المقترحة:</h4>
+                    <div class="space-y-4 md:space-y-6">
+                        <div class="bg-white/5 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 relative overflow-hidden">
+                            <span class="absolute top-0 left-0 bg-blue-500 text-[8px] md:text-[10px] px-4 py-1.5 font-black">الدفعة 1: التأسيس</span>
+                            <div class="mt-4 flex flex-col md:flex-row justify-between items-center gap-2"><span class="text-slate-300 text-sm md:text-base font-bold">تجهيزات + ميزانية 3 أشهر:</span> <span id="d1_val" class="text-2xl md:text-3xl font-black text-white">0</span></div>
+                        </div>
+                        <div class="bg-white/5 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 relative overflow-hidden">
+                            <span class="absolute top-0 left-0 bg-emerald-500 text-[8px] md:text-[10px] px-4 py-1.5 font-black">الدفعة 2: بعد 3 أشهر</span>
+                            <div class="mt-4 flex flex-col md:flex-row justify-between items-center gap-2"><span class="text-slate-300 text-sm md:text-base font-bold">تشغيل الأشهر (4 - 5):</span> <span id="d2_val" class="text-2xl md:text-3xl font-black text-white">0</span></div>
+                        </div>
+                        <div class="bg-white/5 p-6 md:p-8 rounded-[1.5rem] md:rounded-[2rem] border border-white/10 relative overflow-hidden">
+                            <span class="absolute top-0 left-0 bg-amber-500 text-[8px] md:text-[10px] px-4 py-1.5 font-black">الدفعة 3: احتياطي النمو</span>
+                            <div class="mt-4 flex flex-col md:flex-row justify-between items-center gap-2"><span class="text-slate-300 text-sm md:text-base font-bold">ميزانية الشهر 6 + Buffer:</span> <span id="d3_val" class="text-2xl md:text-3xl font-black text-white">0</span></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flex flex-col justify-center text-center">
+                    <div class="p-8 md:p-12 bg-blue-600/20 rounded-[2.5rem] md:rounded-[3.5rem] border-4 border-blue-500/40 mb-8 md:mb-10 shadow-2xl backdrop-blur-md">
+                        <h4 class="text-[10px] md:text-xs font-black text-blue-300 mb-4 md:mb-6 uppercase tracking-[0.4em] italic">إجمالي مبلغ الاستثمار المطلوب</h4>
+                        <p class="text-5xl md:text-8xl font-black text-white"><span id="finalAskDisplay">0</span> <small class="text-xl md:text-2xl ml-2 font-medium">ريال</small></p>
+                    </div>
+                    <div class="p-6 md:p-8 bg-orange-600/20 rounded-[1.5rem] md:rounded-[2rem] border-2 border-orange-500/40 text-sm md:text-base italic text-slate-100 shadow-inner leading-relaxed">
+                        <h5 class="text-orange-400 font-black mb-3 text-lg md:text-xl underline italic underline-offset-8">تحليل الشراكة والنمو:</h5>
+                        <p id="smartRec" class="font-bold">بانتظار البيانات لإعداد التوصية النهائية للمستثمر...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-fixed shadow-[0_-15px_40px_rgba(0,0,0,0.3)]">
+        <div class="container mx-auto px-4 text-center">
+            <div class="flex flex-col gap-3 md:gap-4 items-center">
+                <div class="flex flex-wrap justify-center items-center gap-1 md:gap-2">
+                    <a href="https://x.com/BasheerConsult" target="_blank" class="social-icon" title="X"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="https://www.instagram.com/basheerconsult" target="_blank" class="social-icon" title="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.linkedin.com/in/%D8%A8%D8%B4%D9%8A%D8%B1-%D8%A8%D9%86-%D8%B9%D9%84%D9%8A-2a8a47139/" target="_blank" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.threads.net/@basheerconsult" target="_blank" class="social-icon" title="Threads"><i class="fa-brands fa-threads"></i></a>
+                    <a href="https://www.snapchat.com/add/basheerconsult" target="_blank" class="social-icon" title="Snapchat"><i class="fab fa-snapchat"></i></a>
+                    <a href="https://www.tiktok.com/@basheerconslut" target="_blank" class="social-icon" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-2">
+                    <a href="https://whatsapp.com/channel/0029VbAqVeHEQIauDsnamO2i" target="_blank" class="channel-btn">أكاديمية المبيعات <i class="fab fa-whatsapp text-emerald-400"></i></a>
+                    <a href="https://whatsapp.com/channel/0029Vb5z65f7Noa18DSUnq13" target="_blank" class="channel-btn">التسويق فكرة <i class="fab fa-whatsapp text-emerald-400"></i></a>
+                </div>
+
+                <div class="flex flex-wrap justify-center items-center text-[9px] md:text-[11px] gap-4 font-black uppercase tracking-wider">
+                    <a href="https://wa.me/966537371592" target="_blank" class="text-emerald-400"><i class="fab fa-whatsapp mr-1"></i> واتساب مباشر</a>
+                    <a href="mailto:con4sultant@gmail.com" class="text-blue-400"><i class="fas fa-envelope mr-1"></i> con4sultant@gmail.com</a>
+                </div>
+            </div>
+            <div class="text-[8px] md:text-[10px] mt-4 opacity-30 font-black border-t border-white/5 pt-2 uppercase tracking-[0.2em]">جميع الحقوق محفوظة © د. بشير بن علي - 2026</div>
+        </div>
+    </footer>
+
+    <script>
+        function calculateAll() {
+            try {
+                // 1. Core Data
+                const rate = parseFloat(document.getElementById('rateSlider').value) || 13;
+                document.getElementById('exchangeRateDisplay').innerText = `1 ريال = ${rate.toFixed(2)} جنيه`;
+
+                // 2. Cairo OPEX (EGP)
+                const cairoStaffIDs = ['s_gd', 's_vid', 's_web'];
+                const cairoNumIDs = ['n_gd', 'n_vid', 'n_web'];
+                let egpStaffTotal = 0;
+
+                cairoStaffIDs.forEach((id, index) => {
+                    const salInput = document.getElementById(id);
+                    const numInput = document.getElementById(cairoNumIDs[index]);
+                    const valDisplay = document.getElementById('v_' + id);
+                    if (salInput && numInput && valDisplay) {
+                        const salary = parseInt(salInput.value) || 0;
+                        const count = parseInt(numInput.value) || 0;
+                        valDisplay.innerText = salary.toLocaleString();
+                        egpStaffTotal += (salary * count);
+                    }
+                });
+
+                const rentEgInput = document.getElementById('rent_eg');
+                const rentEgValue = rentEgInput ? (parseInt(rentEgInput.value) || 0) : 0;
+                if (document.getElementById('v_rent_eg')) document.getElementById('v_rent_eg').innerText = rentEgValue.toLocaleString();
+
+                const cairoBufferEgp = 10000; 
+                const totalMonthlyCairoSAR = (egpStaffTotal + rentEgValue + cairoBufferEgp) / rate;
+
+                // 3. Jeddah OPEX (SAR)
+                const sMgmt = parseInt(document.getElementById('s_mgmt').value) || 0;
+                const sSales = parseInt(document.getElementById('s_sales').value) || 0;
+                const nSales = parseInt(document.getElementById('n_sales').value) || 0;
+                const saas = parseInt(document.getElementById('saas').value) || 0;
+                const promo = parseInt(document.getElementById('promo').value) || 0;
+
+                document.getElementById('v_s_mgmt').innerText = sMgmt.toLocaleString();
+                document.getElementById('v_s_sales').innerText = sSales.toLocaleString();
+                document.getElementById('v_saas').innerText = saas.toLocaleString();
+                document.getElementById('v_promo').innerText = promo.toLocaleString();
+
+                const travelMonthly = 1000; 
+                const auditorMonthly = 4000 / 12; 
+                const totalMonthlyJeddahSAR = sMgmt + (sSales * nSales) + saas + promo + travelMonthly + auditorMonthly + 3500;
+
+                // 4. CAPEX (SAR)
+                const capBaseInput = document.getElementById('cap_base');
+                const capBaseValue = capBaseInput ? (parseInt(capBaseInput.value) || 0) : 0;
+                if (document.getElementById('v_cap_base')) document.getElementById('v_cap_base').innerText = capBaseValue.toLocaleString();
+                
+                const legalCairoSAR = 4000; 
+                const totalCapex = legalCairoSAR + capBaseValue;
+
+                // 5. REVENUES (SAR)
+                const revItems = [1, 2, 5, 8];
+                let monthlyRevTotal = 0;
+
+                revItems.forEach(i => {
+                    const priceSlider = document.getElementById('p' + i);
+                    const qtyInput = document.getElementById('q' + i);
+                    const priceDisplay = document.getElementById('v_p' + i);
+                    if (priceSlider && qtyInput && priceDisplay) {
+                        const price = parseInt(priceSlider.value) || 0;
+                        const qty = parseInt(qtyInput.value) || 0;
+                        priceDisplay.innerText = price.toLocaleString();
+                        monthlyRevTotal += (price * qty);
+                    }
+                });
+
+                document.getElementById('monthlyRev').innerText = Math.round(monthlyRevTotal).toLocaleString() + " ريال";
+                
+                // 6. TOTAL OPEX & PROFIT
+                const totalMonthlyOpex = totalMonthlyCairoSAR + totalMonthlyJeddahSAR;
+                const netProfit = monthlyRevTotal - totalMonthlyOpex;
+                document.getElementById('monthlyNetProfit').innerText = Math.round(netProfit).toLocaleString();
+
+                // 7. INVESTMENT ASK (Setup + 6 Months runway)
+                const totalAsk = totalCapex + (totalMonthlyOpex * 6);
+                document.getElementById('summaryAsk').innerText = Math.round(totalAsk).toLocaleString();
+                document.getElementById('finalAskDisplay').innerText = Math.round(totalAsk).toLocaleString();
+
+                // 8. INSTALLMENTS
+                const d1 = totalCapex + (totalMonthlyOpex * 3);
+                const d2 = totalMonthlyOpex * 2;
+                const d3 = totalAsk - d1 - d2;
+
+                document.getElementById('d1_val').innerText = Math.round(d1).toLocaleString() + " ريال";
+                document.getElementById('d2_val').innerText = Math.round(d2).toLocaleString() + " ريال";
+                document.getElementById('d3_val').innerText = Math.round(d3).toLocaleString() + " ريال";
+
+                // 9. PROJECTIONS
+                const y1Sales = monthlyRevTotal * 10; 
+                const y1Opex = (totalMonthlyOpex * 12) + totalCapex;
+                document.getElementById('y1_sales').innerText = Math.round(y1Sales).toLocaleString();
+                document.getElementById('y1_opex').innerText = Math.round(y1Opex).toLocaleString();
+                document.getElementById('y1_net').innerText = Math.round(y1Sales - y1Opex).toLocaleString();
+
+                const y2Sales = y1Sales * 1.35 * 1.2; 
+                const y2Opex = (totalMonthlyOpex * 12) * 1.1; 
+                document.getElementById('y2_sales').innerText = Math.round(y2Sales).toLocaleString();
+                document.getElementById('y2_opex').innerText = Math.round(y2Opex).toLocaleString();
+                document.getElementById('y2_net').innerText = Math.round(y2Sales - y2Opex).toLocaleString();
+
+                const y3Sales = y2Sales * 1.25;
+                const y3Opex = y2Opex * 1.1;
+                document.getElementById('y3_sales').innerText = Math.round(y3Sales).toLocaleString();
+                document.getElementById('y3_opex').innerText = Math.round(y3Opex).toLocaleString();
+                document.getElementById('y3_net').innerText = Math.round(y3Sales - y3Opex).toLocaleString();
+
+                let rec = "";
+                const ratio = monthlyRevTotal / totalMonthlyOpex;
+                if (ratio < 1.1) rec = "المرحلة الحالية تركز على بناء الثبات؛ دعوتي لك هي الدخول كشريك لتأسيس الكيان وضمان الاستدامة.";
+                else if (ratio < 1.8) rec = "هذا هو الوقت الذهبي لبدء الشراكة؛ التوازن بين التكاليف والإيرادات يسمح بنمو متسارع.";
+                else rec = "نحن أمام محرك أرباح استثنائي. فارق الصرف يضمن لنا نمواً سريعاً وثباتاً في السوق السعودي.";
+                document.getElementById('smartRec').innerText = rec;
+
+            } catch (err) {
+                console.error("Calculation Error:", err);
+            }
+        }
+
+        window.onload = calculateAll;
+    </script>
+</body>
+</html>
